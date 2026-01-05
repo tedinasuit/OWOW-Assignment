@@ -120,8 +120,8 @@ export default function Home() {
       {/* Content */}
       <div className="max-w-[1400px] mx-auto px-4 pt-32 pb-24">
         {/* Toolbar */}
-        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 sticky top-24 z-30 pointer-events-none">
-          <div className="pointer-events-auto w-full md:w-auto flex-1">
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8">
+          <div className="w-full md:w-auto flex-1">
             <FilterBar
               searchQuery={searchQuery}
               onSearchChange={setSearchQuery}
@@ -129,7 +129,7 @@ export default function Home() {
               onRoleChange={setSelectedRole}
             />
           </div>
-          <div className="pointer-events-auto ml-auto">
+          <div className="ml-auto">
             <ViewToggle view={view} onViewChange={setView} />
           </div>
         </div>
