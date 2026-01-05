@@ -20,8 +20,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const [session, setSession] = useState<Session | null>(null);
     const [isGuest, setIsGuest] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
+        setMounted(true);
+
+        // Check for guest mode in localStorage (client-side only)
+        if (typeof window !== 'undefined') {
+            const guestMode = localStorage.getItem('isGuest');
+            if (guestMode === 'true') {
+                setIsGuest(true);
+            }
+        }
+
         // Check for existing session
         supabase.auth.getSession().then(({ data: { session } }) => {
             setSession(session);
@@ -29,17 +40,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             setLoading(false);
         });
 
-        // Check for guest mode in localStorage
-        const guestMode = localStorage.getItem('isGuest');
-        if (guestMode === 'true') {
-            setIsGuest(true);
-        }
-
         // Listen for auth changes
         const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
             setSession(session);
             setUser(session?.user ?? null);
-            if (session) {
+            if (session && typeof window !== 'undefined') {
                 setIsGuest(false);
                 localStorage.removeItem('isGuest');
             }
@@ -61,13 +66,35 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const signOut = async () => {
         await supabase.auth.signOut();
         setIsGuest(false);
-        localStorage.removeItem('isGuest');
+        if (typeof window !== 'undefined') {
+            localStorage.removeItem('isGuest');
+        }
     };
 
     const continueAsGuest = () => {
         setIsGuest(true);
-        localStorage.setItem('isGuest', 'true');
+        if (typeof window !== 'undefined') {
+            localStorage.setItem('isGuest', 'true');
+        }
     };
+
+    // Show loading state until mounted on client
+    if (!mounted) {
+        return (
+            <AuthContext.Provider value={{
+                user: null,
+                session: null,
+                isGuest: false,
+                loading: true,
+                signIn,
+                signUp,
+                signOut,
+                continueAsGuest,
+            }}>
+                {children}
+            </AuthContext.Provider>
+        );
+    }
 
     return (
         <AuthContext.Provider value={{
