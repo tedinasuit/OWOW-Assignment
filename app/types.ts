@@ -8,3 +8,11 @@ export interface Wizkid {
     image_url: string | null;
     created_at: string;
 }
+
+export interface UserProfile {
+    id: string;
+    role: 'Boss' | 'Developer' | 'Designer' | 'Intern' | null;
+    phone: string | null;
+    avatar_url: string | null;
+    updated_at: string;
+}
