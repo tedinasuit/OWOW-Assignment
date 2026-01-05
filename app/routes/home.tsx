@@ -17,6 +17,10 @@ export function meta({ }: Route.MetaArgs) {
   ];
 }
 
+import { FilterBar } from '~/components/FilterBar';
+
+// ... (keep existing imports)
+
 export default function Home() {
   const { user, isGuest, loading: authLoading } = useAuth();
   const navigate = useNavigate();
@@ -25,6 +29,10 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('grid');
   const [userRole, setUserRole] = useState<string | null>(null);
+
+  // Search & Filter state
+  const [searchQuery, setSearchQuery] = useState('');
+  const [selectedRole, setSelectedRole] = useState<string | undefined>(undefined);
 
   // Edit dialog state
   const [editingWizkid, setEditingWizkid] = useState<Wizkid | null>(null);
@@ -83,6 +91,16 @@ export default function Home() {
     fetchWizkids();
   };
 
+  const filteredWizkids = wizkids.filter(w => {
+    const matchesSearch =
+      w.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (w.email && w.email.toLowerCase().includes(searchQuery.toLowerCase()));
+
+    const matchesRole = selectedRole ? w.role === selectedRole : true;
+
+    return matchesSearch && matchesRole;
+  });
+
   if (authLoading) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-owow-black text-white">
@@ -101,9 +119,17 @@ export default function Home() {
 
       {/* Content */}
       <div className="max-w-[1400px] mx-auto px-4 pt-32 pb-24">
-        {/* Header with view toggle */}
-        <div className="flex items-center justify-end mb-8 sticky top-24 z-30 pointer-events-none">
-          <div className="pointer-events-auto">
+        {/* Toolbar */}
+        <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-8 sticky top-24 z-30 pointer-events-none">
+          <div className="pointer-events-auto w-full md:w-auto flex-1">
+            <FilterBar
+              searchQuery={searchQuery}
+              onSearchChange={setSearchQuery}
+              selectedRole={selectedRole}
+              onRoleChange={setSelectedRole}
+            />
+          </div>
+          <div className="pointer-events-auto ml-auto">
             <ViewToggle view={view} onViewChange={setView} />
           </div>
         </div>
@@ -117,19 +143,19 @@ export default function Home() {
           <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center">
             <p className="text-red-400">{error}</p>
           </div>
-        ) : wizkids.length === 0 ? (
-          <div className="bg-white/5 border border-white/5 rounded-2xl p-16 text-center">
+        ) : filteredWizkids.length === 0 ? (
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-16 text-center animate-in fade-in zoom-in-95 duration-300">
             <p className="text-white text-2xl font-bold">No Wizkids found</p>
             <p className="text-gray-500 mt-2">
-              Time to hire some talent.
+              {wizkids.length === 0 ? "Time to hire some talent." : "Try adjusting your filters."}
             </p>
           </div>
         ) : (
           <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
             {view === 'list' ? (
-              <WizkidList wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
+              <WizkidList wizkids={filteredWizkids} onEdit={!isGuest ? handleEdit : undefined} />
             ) : (
-              <WizkidGrid wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
+              <WizkidGrid wizkids={filteredWizkids} onEdit={!isGuest ? handleEdit : undefined} />
             )}
           </div>
         )}

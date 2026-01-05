@@ -63,11 +63,23 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
                 isFired ? "opacity-50 grayscale cursor-not-allowed" : "cursor-default"
             )}
         >
-            {/* Flood Effect Layer */}
+            {/* Background Image */}
+            {wizkid.image_url && !isFired && (
+                <>
+                    <img
+                        src={wizkid.image_url}
+                        alt={wizkid.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0 opacity-60 mix-blend-overlay grayscale group-hover:grayscale-0"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0" />
+                </>
+            )}
+
+            {/* Flood Effect Layer (z-10 to appear above image but below content) */}
             {!isFired && (
                 <div
                     className={cn(
-                        "absolute rounded-full transition-transform duration-500 ease-in-out z-0 pointer-events-none",
+                        "absolute rounded-full transition-transform duration-500 ease-in-out z-10 pointer-events-none mix-blend-multiply opacity-90",
                         roleTheme.flood,
                         // Position centered on the dot (top-4 left-4 is 16px, dot is 12px, so center is 16+6=22px)
                         "top-[22px] left-[22px] -translate-x-1/2 -translate-y-1/2",
@@ -79,7 +91,7 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
             )}
 
             {/* Top Bar with Dot */}
-            <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-10">
+            <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-20">
                 <div className={cn("h-3 w-3 rounded-full transition-colors", roleTheme.dot)} />
 
                 {/* Edit Button - Visible on Hover */}
