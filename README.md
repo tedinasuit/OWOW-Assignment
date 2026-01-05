@@ -89,4 +89,4 @@ Open [http://localhost:5173](http://localhost:5173) in your browser.
 This project is part of the OWOW assignment. All rights reserved.
 
 ---
-*Crafted with ❤️ by the Wizkid Team.*
+*Crafted with ❤️ by the intern.*
