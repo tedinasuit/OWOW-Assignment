@@ -100,13 +100,36 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
         setFiringLoading(true);
         setError(null);
 
+        const newFiredStatus = !isFired;
+
         try {
             const { error } = await supabase
                 .from('wizkids')
-                .update({ fired: !isFired })
+                .update({ fired: newFiredStatus })
                 .eq('id', wizkid.id);
 
             if (error) throw error;
+
+            // Send notification email if wizkid has an email
+            if (wizkid.email) {
+                try {
+                    const { data: { session } } = await supabase.auth.getSession();
+                    await supabase.functions.invoke('fire-notification', {
+                        body: {
+                            wizkidName: wizkid.name,
+                            wizkidEmail: wizkid.email,
+                            fired: newFiredStatus,
+                        },
+                        headers: {
+                            Authorization: `Bearer ${session?.access_token}`,
+                        },
+                    });
+                } catch (emailError) {
+                    console.error('Failed to send notification email:', emailError);
+                    // Don't throw - the firing was successful, email is secondary
+                }
+            }
+
 
             setConfirmOpen(false);
             onSave();
