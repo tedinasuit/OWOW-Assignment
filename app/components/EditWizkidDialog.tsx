@@ -144,12 +144,12 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-md">
+                <DialogContent className="sm:max-w-md bg-owow-card border-white/10 text-white">
                     <DialogHeader>
-                        <DialogTitle className="flex items-center gap-2">
+                        <DialogTitle className="flex items-center gap-2 text-white">
                             Edit Wizkid
                             {isFired && (
-                                <span className="text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700 font-medium">
+                                <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-500 font-medium border border-red-500/20">
                                     Fired
                                 </span>
                             )}
@@ -159,26 +159,27 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
                     <form onSubmit={handleSubmit} className="space-y-5 pt-4">
                         {/* Name */}
                         <div className="space-y-2">
-                            <Label htmlFor="name">Name</Label>
+                            <Label htmlFor="name" className="text-gray-400">Name</Label>
                             <Input
                                 id="name"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
                                 placeholder="Full name"
                                 required
+                                className="bg-black/30 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-owow-blue"
                             />
                         </div>
 
                         {/* Role */}
                         <div className="space-y-2">
-                            <Label htmlFor="role">Role</Label>
+                            <Label htmlFor="role" className="text-gray-400">Role</Label>
                             <Select value={role} onValueChange={setRole}>
-                                <SelectTrigger>
+                                <SelectTrigger className="bg-black/30 border-white/10 text-white focus:ring-owow-blue">
                                     <SelectValue placeholder="Select a role" />
                                 </SelectTrigger>
-                                <SelectContent>
+                                <SelectContent className="bg-owow-card border-white/10 text-white">
                                     {ROLES.map((r) => (
-                                        <SelectItem key={r} value={r}>
+                                        <SelectItem key={r} value={r} className="focus:bg-white/10 focus:text-white cursor-pointer">
                                             {r}
                                         </SelectItem>
                                     ))}
@@ -188,43 +189,46 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
 
                         {/* Email */}
                         <div className="space-y-2">
-                            <Label htmlFor="email">Email</Label>
+                            <Label htmlFor="email" className="text-gray-400">Email</Label>
                             <Input
                                 id="email"
                                 type="email"
                                 value={email}
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="email@owow.nl"
+                                className="bg-black/30 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-owow-blue"
                             />
                         </div>
 
                         {/* Phone */}
                         <div className="space-y-2">
-                            <Label htmlFor="phone">Phone</Label>
+                            <Label htmlFor="phone" className="text-gray-400">Phone</Label>
                             <Input
                                 id="phone"
                                 type="tel"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
                                 placeholder="+31 6 12345678"
+                                className="bg-black/30 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-owow-blue"
                             />
                         </div>
 
                         {/* Birth Date */}
                         <div className="space-y-2">
-                            <Label htmlFor="birthDate">Birth Date</Label>
+                            <Label htmlFor="birthDate" className="text-gray-400">Birth Date</Label>
                             <Input
                                 id="birthDate"
                                 type="date"
                                 value={birthDate}
                                 onChange={(e) => setBirthDate(e.target.value)}
                                 required
+                                className="bg-black/30 border-white/10 text-white placeholder:text-gray-600 focus-visible:ring-owow-blue invert-calendar-icon"
                             />
                         </div>
 
                         {/* Error */}
                         {error && (
-                            <div className="p-3 bg-red-50 border border-red-100 rounded-lg text-red-600 text-sm">
+                            <div className="p-3 bg-red-500/10 border border-red-500/20 rounded-lg text-red-500 text-sm">
                                 {error}
                             </div>
                         )}
@@ -236,9 +240,13 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
                                 {isBoss && (
                                     <Button
                                         type="button"
-                                        variant={isFired ? 'outline' : 'destructive'}
+                                        variant="outline"
                                         onClick={() => setConfirmOpen(true)}
                                         disabled={loading || firingLoading}
+                                        className={isFired
+                                            ? "border-green-500/50 text-green-500 hover:bg-green-500/10 hover:text-green-400"
+                                            : "border-red-500/50 text-red-500 hover:bg-red-500/10 hover:text-red-400"
+                                        }
                                     >
                                         {isFired ? 'Rehire' : 'Fire'}
                                     </Button>
@@ -248,13 +256,18 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
                             <div className="flex gap-3">
                                 <Button
                                     type="button"
-                                    variant="outline"
+                                    variant="ghost"
                                     onClick={() => onOpenChange(false)}
                                     disabled={loading}
+                                    className="text-gray-400 hover:text-white hover:bg-white/10"
                                 >
                                     Cancel
                                 </Button>
-                                <Button type="submit" disabled={loading}>
+                                <Button
+                                    type="submit"
+                                    disabled={loading}
+                                    className="bg-white text-black hover:bg-gray-200"
+                                >
                                     {loading ? 'Saving...' : 'Save Changes'}
                                 </Button>
                             </div>
@@ -265,12 +278,12 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
 
             {/* Confirmation Dialog */}
             <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
-                <AlertDialogContent>
+                <AlertDialogContent className="bg-owow-card border-white/10 text-white">
                     <AlertDialogHeader>
                         <AlertDialogTitle>
                             {isFired ? 'Rehire this Wizkid?' : 'Fire this Wizkid?'}
                         </AlertDialogTitle>
-                        <AlertDialogDescription>
+                        <AlertDialogDescription className="text-gray-400">
                             {isFired
                                 ? `${wizkid?.name} will be reinstated as an active team member.`
                                 : `Are you sure you want to fire ${wizkid?.name}? They will receive a notification email.`
@@ -278,11 +291,19 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
-                        <AlertDialogCancel disabled={firingLoading}>Cancel</AlertDialogCancel>
+                        <AlertDialogCancel
+                            disabled={firingLoading}
+                            className="bg-transparent border-white/10 text-white hover:bg-white/10 hover:text-white"
+                        >
+                            Cancel
+                        </AlertDialogCancel>
                         <AlertDialogAction
                             onClick={handleFire}
                             disabled={firingLoading}
-                            className={isFired ? '' : 'bg-red-600 hover:bg-red-700'}
+                            className={isFired
+                                ? "bg-green-600 hover:bg-green-700 text-white"
+                                : "bg-red-600 hover:bg-red-700 text-white"
+                            }
                         >
                             {firingLoading ? 'Processing...' : isFired ? 'Rehire' : 'Fire'}
                         </AlertDialogAction>

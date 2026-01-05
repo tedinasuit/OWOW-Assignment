@@ -7,14 +7,14 @@ interface ViewToggleProps {
 
 export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
     return (
-        <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+        <div className="flex items-center gap-1 bg-white/10 rounded-lg p-1 border border-white/5 backdrop-blur-sm">
             <Button
                 variant="ghost"
                 size="sm"
                 onClick={() => onViewChange('list')}
-                className={`h-8 w-8 p-0 ${view === 'list'
-                        ? 'bg-white shadow-sm text-gray-900'
-                        : 'text-gray-500 hover:text-gray-700'
+                className={`h-8 w-8 p-0 transition-all ${view === 'list'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-gray-500 hover:text-white hover:bg-white/5'
                     }`}
             >
                 <svg
@@ -37,9 +37,9 @@ export function ViewToggle({ view, onViewChange }: ViewToggleProps) {
                 variant="ghost"
                 size="sm"
                 onClick={() => onViewChange('grid')}
-                className={`h-8 w-8 p-0 ${view === 'grid'
-                        ? 'bg-white shadow-sm text-gray-900'
-                        : 'text-gray-500 hover:text-gray-700'
+                className={`h-8 w-8 p-0 transition-all ${view === 'grid'
+                    ? 'bg-white text-black shadow-sm'
+                    : 'text-gray-500 hover:text-white hover:bg-white/5'
                     }`}
             >
                 <svg

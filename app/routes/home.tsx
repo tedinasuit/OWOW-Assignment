@@ -23,7 +23,7 @@ export default function Home() {
   const [wizkids, setWizkids] = useState<Wizkid[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [view, setView] = useState<'grid' | 'list'>('list');
+  const [view, setView] = useState<'grid' | 'list'>('grid');
   const [userRole, setUserRole] = useState<string | null>(null);
 
   // Edit dialog state
@@ -85,8 +85,8 @@ export default function Home() {
 
   if (authLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin h-8 w-8 border-4 border-pink-500 border-t-transparent rounded-full"></div>
+      <main className="min-h-screen flex items-center justify-center bg-owow-black text-white">
+        <div className="animate-spin h-8 w-8 border-4 border-owow-pink border-t-transparent rounded-full"></div>
       </main>
     );
   }
@@ -96,43 +96,42 @@ export default function Home() {
   }
 
   return (
-    <main className="min-h-screen bg-white">
+    <main className="min-h-screen bg-owow-black text-white selection:bg-owow-orange selection:text-white">
       <FloatingNav />
 
       {/* Content */}
-      <div className="max-w-4xl mx-auto px-6 pt-28 pb-12">
+      <div className="max-w-[1400px] mx-auto px-4 pt-32 pb-24">
         {/* Header with view toggle */}
-        <div className="flex items-center justify-end mb-6">
-          <ViewToggle view={view} onViewChange={setView} />
+        <div className="flex items-center justify-end mb-8 sticky top-24 z-30 pointer-events-none">
+          <div className="pointer-events-auto">
+            <ViewToggle view={view} onViewChange={setView} />
+          </div>
         </div>
 
         {/* Content area */}
         {loading ? (
           <div className="flex items-center justify-center py-20">
-            <div className="animate-spin h-8 w-8 border-4 border-pink-500 border-t-transparent rounded-full"></div>
+            <div className="animate-spin h-8 w-8 border-4 border-owow-pink border-t-transparent rounded-full"></div>
           </div>
         ) : error ? (
-          <div className="bg-red-50 border border-red-100 rounded-2xl p-6 text-center">
-            <p className="text-red-600">{error}</p>
-            <p className="text-red-400 text-sm mt-2">
-              Make sure you've run the SQL setup in Supabase.
-            </p>
+          <div className="bg-red-500/10 border border-red-500/20 rounded-2xl p-6 text-center">
+            <p className="text-red-400">{error}</p>
           </div>
         ) : wizkids.length === 0 ? (
-          <div className="bg-gray-50 border border-gray-100 rounded-2xl p-8 text-center">
-            <p className="text-gray-900 text-lg">No Wizkids found</p>
+          <div className="bg-white/5 border border-white/5 rounded-2xl p-16 text-center">
+            <p className="text-white text-2xl font-bold">No Wizkids found</p>
             <p className="text-gray-500 mt-2">
-              Run the SQL setup to add some Wizkids to the database.
+              Time to hire some talent.
             </p>
           </div>
         ) : (
-          <>
+          <div className="animate-in fade-in slide-in-from-bottom-8 duration-700">
             {view === 'list' ? (
               <WizkidList wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
             ) : (
               <WizkidGrid wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
             )}
-          </>
+          </div>
         )}
       </div>
 
