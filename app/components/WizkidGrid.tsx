@@ -1,8 +1,10 @@
 import type { Wizkid } from '~/types';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Button } from '~/components/ui/button';
 
 interface WizkidGridProps {
     wizkids: Wizkid[];
+    onEdit?: (wizkid: Wizkid) => void;
 }
 
 function calculateAge(birthDate: string): number {
@@ -30,14 +32,39 @@ function getRoleBadgeColor(role: string): string {
     }
 }
 
-export function WizkidGrid({ wizkids }: WizkidGridProps) {
+export function WizkidGrid({ wizkids, onEdit }: WizkidGridProps) {
     return (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {wizkids.map((wizkid) => (
                 <div
                     key={wizkid.id}
-                    className="p-6 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-all hover:shadow-md"
+                    className="group relative p-6 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-all hover:shadow-md"
                 >
+                    {/* Edit button */}
+                    {onEdit && (
+                        <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => onEdit(wizkid)}
+                            className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity h-8 w-8 p-0"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                width="14"
+                                height="14"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                            >
+                                <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                <path d="m15 5 4 4" />
+                            </svg>
+                        </Button>
+                    )}
+
                     <div className="flex flex-col items-center text-center">
                         <Avatar className="h-16 w-16 mb-4">
                             {wizkid.image_url ? (
@@ -55,14 +82,14 @@ export function WizkidGrid({ wizkids }: WizkidGridProps) {
 
                         <div className="mt-3 space-y-1 text-sm text-gray-500">
                             {wizkid.email && (
-                                <a href={`mailto:${wizkid.email}`} className="block hover:text-gray-700 truncate max-w-full">
+                                <span className="block truncate max-w-full">
                                     {wizkid.email}
-                                </a>
+                                </span>
                             )}
                             {wizkid.phone && (
-                                <a href={`tel:${wizkid.phone}`} className="block hover:text-gray-700">
+                                <span className="block">
                                     {wizkid.phone}
-                                </a>
+                                </span>
                             )}
                         </div>
 

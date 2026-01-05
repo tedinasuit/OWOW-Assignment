@@ -1,8 +1,10 @@
 import type { Wizkid } from '~/types';
 import { Avatar, AvatarFallback, AvatarImage } from '~/components/ui/avatar';
+import { Button } from '~/components/ui/button';
 
 interface WizkidListProps {
     wizkids: Wizkid[];
+    onEdit?: (wizkid: Wizkid) => void;
 }
 
 function calculateAge(birthDate: string): number {
@@ -30,13 +32,13 @@ function getRoleBadgeColor(role: string): string {
     }
 }
 
-export function WizkidList({ wizkids }: WizkidListProps) {
+export function WizkidList({ wizkids, onEdit }: WizkidListProps) {
     return (
         <div className="space-y-3">
             {wizkids.map((wizkid) => (
                 <div
                     key={wizkid.id}
-                    className="flex items-center gap-4 p-4 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-colors"
+                    className="group flex items-center gap-4 p-4 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-colors"
                 >
                     <Avatar className="h-12 w-12 shrink-0">
                         {wizkid.image_url ? (
@@ -56,23 +58,48 @@ export function WizkidList({ wizkids }: WizkidListProps) {
                         </div>
                         <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                             {wizkid.email && (
-                                <a href={`mailto:${wizkid.email}`} className="hover:text-gray-700 truncate">
+                                <span className="truncate">
                                     {wizkid.email}
-                                </a>
+                                </span>
                             )}
                             {wizkid.phone && (
-                                <a href={`tel:${wizkid.phone}`} className="hover:text-gray-700 whitespace-nowrap">
+                                <span className="whitespace-nowrap">
                                     {wizkid.phone}
-                                </a>
+                                </span>
                             )}
                         </div>
                     </div>
 
-                    <div className="text-right shrink-0">
-                        <span className="text-sm text-gray-900 font-medium">
-                            {calculateAge(wizkid.birth_date)}
-                        </span>
-                        <span className="text-sm text-gray-500 ml-1">yrs</span>
+                    <div className="flex items-center gap-3 shrink-0">
+                        <div className="text-right">
+                            <span className="text-sm text-gray-900 font-medium">
+                                {calculateAge(wizkid.birth_date)}
+                            </span>
+                            <span className="text-sm text-gray-500 ml-1">yrs</span>
+                        </div>
+                        {onEdit && (
+                            <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => onEdit(wizkid)}
+                                className="opacity-0 group-hover:opacity-100 transition-opacity"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    width="16"
+                                    height="16"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    strokeWidth="2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                >
+                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" />
+                                    <path d="m15 5 4 4" />
+                                </svg>
+                            </Button>
+                        )}
                     </div>
                 </div>
             ))}

@@ -8,6 +8,7 @@ import { FloatingNav } from '~/components/FloatingNav';
 import { ViewToggle } from '~/components/ViewToggle';
 import { WizkidList } from '~/components/WizkidList';
 import { WizkidGrid } from '~/components/WizkidGrid';
+import { EditWizkidDialog } from '~/components/EditWizkidDialog';
 
 export function meta({ }: Route.MetaArgs) {
   return [
@@ -24,33 +25,46 @@ export default function Home() {
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('list');
 
+  // Edit dialog state
+  const [editingWizkid, setEditingWizkid] = useState<Wizkid | null>(null);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+
   useEffect(() => {
     if (!authLoading && !user && !isGuest) {
       navigate('/auth');
     }
   }, [user, isGuest, authLoading, navigate]);
 
-  useEffect(() => {
-    async function fetchWizkids() {
-      try {
-        const { data, error } = await supabase
-          .from('wizkids')
-          .select('*')
-          .order('name');
+  const fetchWizkids = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('wizkids')
+        .select('*')
+        .order('name');
 
-        if (error) throw error;
-        setWizkids(data || []);
-      } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch wizkids');
-      } finally {
-        setLoading(false);
-      }
+      if (error) throw error;
+      setWizkids(data || []);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch wizkids');
+    } finally {
+      setLoading(false);
     }
+  };
 
+  useEffect(() => {
     if (user || isGuest) {
       fetchWizkids();
     }
   }, [user, isGuest]);
+
+  const handleEdit = (wizkid: Wizkid) => {
+    setEditingWizkid(wizkid);
+    setEditDialogOpen(true);
+  };
+
+  const handleSave = () => {
+    fetchWizkids(); // Refresh the list after save
+  };
 
   if (authLoading) {
     return (
@@ -97,13 +111,21 @@ export default function Home() {
         ) : (
           <>
             {view === 'list' ? (
-              <WizkidList wizkids={wizkids} />
+              <WizkidList wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
             ) : (
-              <WizkidGrid wizkids={wizkids} />
+              <WizkidGrid wizkids={wizkids} onEdit={!isGuest ? handleEdit : undefined} />
             )}
           </>
         )}
       </div>
+
+      {/* Edit Dialog */}
+      <EditWizkidDialog
+        wizkid={editingWizkid}
+        open={editDialogOpen}
+        onOpenChange={setEditDialogOpen}
+        onSave={handleSave}
+      />
     </main>
   );
 }
