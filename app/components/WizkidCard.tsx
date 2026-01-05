@@ -58,9 +58,10 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
 
     return (
         <div
+            onClick={() => !isFired && onEdit?.(wizkid)}
             className={cn(
                 "group relative aspect-[3/4] w-full overflow-hidden bg-owow-card transition-all duration-300 ease-out isolate",
-                isFired ? "opacity-50 grayscale cursor-not-allowed" : "cursor-default"
+                isFired ? "opacity-50 grayscale cursor-not-allowed" : "cursor-pointer"
             )}
         >
             {/* Background Image */}
@@ -69,9 +70,9 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
                     <img
                         src={wizkid.image_url}
                         alt={wizkid.name}
-                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 z-0 opacity-60 mix-blend-overlay grayscale group-hover:grayscale-0"
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 z-0 opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent z-0" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-0" />
                 </>
             )}
 
@@ -79,7 +80,7 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
             {!isFired && (
                 <div
                     className={cn(
-                        "absolute rounded-full transition-transform duration-500 ease-in-out z-10 pointer-events-none mix-blend-multiply opacity-90",
+                        "absolute rounded-full transition-transform duration-500 ease-in-out z-10 pointer-events-none",
                         roleTheme.flood,
                         // Position centered on the dot (top-4 left-4 is 16px, dot is 12px, so center is 16+6=22px)
                         "top-[22px] left-[22px] -translate-x-1/2 -translate-y-1/2",
@@ -93,31 +94,10 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
             {/* Top Bar with Dot */}
             <div className="absolute top-4 left-4 right-4 flex justify-between items-start z-20">
                 <div className={cn("h-3 w-3 rounded-full transition-colors", roleTheme.dot)} />
-
-                {/* Edit Button - Visible on Hover */}
-                {onEdit && (
-                    <Button
-                        variant="ghost"
-                        size="icon"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            onEdit(wizkid);
-                        }}
-                        className={cn(
-                            "h-8 w-8 rounded-full opacity-0 group-hover:opacity-100 transition-opacity",
-                            "hover:bg-black/20 text-white",
-                            roleTheme.hoverText
-                        )}
-                    >
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                            <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z" /><path d="m15 5 4 4" />
-                        </svg>
-                    </Button>
-                )}
             </div>
 
             {/* Main Content (Centered/Bottom) */}
-            <div className="absolute inset-0 p-6 flex flex-col justify-end z-10 pointer-events-none">
+            <div className="absolute inset-0 p-6 flex flex-col justify-end z-20 pointer-events-none">
                 {/* Role Label */}
                 <span className={cn(
                     "font-mono text-xs uppercase tracking-widest mb-2 transition-colors duration-300 text-gray-500",
