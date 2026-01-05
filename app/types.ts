@@ -6,6 +6,7 @@ export interface Wizkid {
     email: string | null;
     phone: string | null;
     image_url: string | null;
+    fired: boolean;
     created_at: string;
 }
 

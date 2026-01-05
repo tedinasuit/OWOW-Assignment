@@ -38,7 +38,10 @@ export function WizkidList({ wizkids, onEdit }: WizkidListProps) {
             {wizkids.map((wizkid) => (
                 <div
                     key={wizkid.id}
-                    className="group flex items-center gap-4 p-4 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-colors"
+                    className={`group flex items-center gap-4 p-4 rounded-2xl transition-colors ${wizkid.fired
+                            ? 'bg-gray-200/50 opacity-60'
+                            : 'bg-gray-100 hover:bg-gray-150'
+                        }`}
                 >
                     <Avatar className="h-12 w-12 shrink-0">
                         {wizkid.image_url ? (
@@ -51,21 +54,29 @@ export function WizkidList({ wizkids, onEdit }: WizkidListProps) {
 
                     <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2">
-                            <h3 className="font-medium text-gray-900 truncate">{wizkid.name}</h3>
-                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getRoleBadgeColor(wizkid.role)}`}>
-                                {wizkid.role}
-                            </span>
+                            <h3 className={`font-medium truncate ${wizkid.fired ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                                {wizkid.name}
+                            </h3>
+                            {wizkid.fired ? (
+                                <span className="text-xs px-2 py-0.5 rounded-full font-medium bg-red-100 text-red-700">
+                                    Fired
+                                </span>
+                            ) : (
+                                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${getRoleBadgeColor(wizkid.role)}`}>
+                                    {wizkid.role}
+                                </span>
+                            )}
                         </div>
                         <div className="flex items-center gap-4 mt-1 text-sm text-gray-500">
                             {wizkid.email && (
-                                <span className="truncate">
+                                <a href={`mailto:${wizkid.email}`} className="hover:text-gray-700 truncate">
                                     {wizkid.email}
-                                </span>
+                                </a>
                             )}
                             {wizkid.phone && (
-                                <span className="whitespace-nowrap">
+                                <a href={`tel:${wizkid.phone}`} className="hover:text-gray-700 whitespace-nowrap">
                                     {wizkid.phone}
-                                </span>
+                                </a>
                             )}
                         </div>
                     </div>

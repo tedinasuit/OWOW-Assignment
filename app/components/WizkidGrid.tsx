@@ -38,7 +38,10 @@ export function WizkidGrid({ wizkids, onEdit }: WizkidGridProps) {
             {wizkids.map((wizkid) => (
                 <div
                     key={wizkid.id}
-                    className="group relative p-6 bg-gray-100 rounded-2xl hover:bg-gray-150 transition-all hover:shadow-md"
+                    className={`group relative p-6 rounded-2xl transition-all ${wizkid.fired
+                        ? 'bg-gray-200/50 opacity-60'
+                        : 'bg-gray-100 hover:bg-gray-150 hover:shadow-md'
+                        }`}
                 >
                     {/* Edit button */}
                     {onEdit && (
@@ -75,10 +78,18 @@ export function WizkidGrid({ wizkids, onEdit }: WizkidGridProps) {
                             </AvatarFallback>
                         </Avatar>
 
-                        <h3 className="font-medium text-gray-900">{wizkid.name}</h3>
-                        <span className={`text-xs px-2 py-0.5 rounded-full font-medium mt-2 ${getRoleBadgeColor(wizkid.role)}`}>
-                            {wizkid.role}
-                        </span>
+                        <h3 className={`font-medium ${wizkid.fired ? 'text-gray-500 line-through' : 'text-gray-900'}`}>
+                            {wizkid.name}
+                        </h3>
+                        {wizkid.fired ? (
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium mt-2 bg-red-100 text-red-700">
+                                Fired
+                            </span>
+                        ) : (
+                            <span className={`text-xs px-2 py-0.5 rounded-full font-medium mt-2 ${getRoleBadgeColor(wizkid.role)}`}>
+                                {wizkid.role}
+                            </span>
+                        )}
 
                         <div className="mt-3 space-y-1 text-sm text-gray-500">
                             {wizkid.email && (

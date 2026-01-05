@@ -24,6 +24,7 @@ export default function Home() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [view, setView] = useState<'grid' | 'list'>('list');
+  const [userRole, setUserRole] = useState<string | null>(null);
 
   // Edit dialog state
   const [editingWizkid, setEditingWizkid] = useState<Wizkid | null>(null);
@@ -34,6 +35,22 @@ export default function Home() {
       navigate('/auth');
     }
   }, [user, isGuest, authLoading, navigate]);
+
+  // Fetch user's role from profile
+  useEffect(() => {
+    if (user) {
+      supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', user.id)
+        .single()
+        .then(({ data }) => {
+          if (data?.role) {
+            setUserRole(data.role);
+          }
+        });
+    }
+  }, [user]);
 
   const fetchWizkids = async () => {
     try {
@@ -63,7 +80,7 @@ export default function Home() {
   };
 
   const handleSave = () => {
-    fetchWizkids(); // Refresh the list after save
+    fetchWizkids();
   };
 
   if (authLoading) {
@@ -125,7 +142,9 @@ export default function Home() {
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         onSave={handleSave}
+        userRole={userRole}
       />
     </main>
   );
 }
+
