@@ -58,10 +58,10 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
 
     return (
         <div
-            onClick={() => !isFired && onEdit?.(wizkid)}
+            onClick={() => onEdit?.(wizkid)}
             className={cn(
-                "group relative aspect-[3/4] w-full overflow-hidden bg-owow-card transition-all duration-300 ease-out isolate",
-                isFired ? "opacity-50 grayscale cursor-not-allowed" : "cursor-pointer"
+                "group relative aspect-[3/4] w-full overflow-hidden bg-owow-card transition-all duration-300 ease-out isolate cursor-pointer",
+                isFired ? "opacity-50 grayscale" : ""
             )}
         >
             {/* Background Image */}
@@ -70,7 +70,7 @@ export function WizkidCard({ wizkid, onEdit }: WizkidCardProps) {
                     <img
                         src={wizkid.image_url}
                         alt={wizkid.name}
-                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 z-0 opacity-80 grayscale group-hover:grayscale-0 group-hover:opacity-100"
+                        className="absolute inset-0 w-full h-full object-cover transition-all duration-700 group-hover:scale-110 z-0 opacity-80 grayscale-[50%] group-hover:grayscale-0 group-hover:opacity-100"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-0" />
                 </>

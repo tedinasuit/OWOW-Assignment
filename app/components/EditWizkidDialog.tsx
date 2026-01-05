@@ -109,7 +109,7 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
     return (
         <>
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <DialogContent className="sm:max-w-[425px] p-0 overflow-hidden bg-owow-card border-white/10 text-white gap-0">
+                <DialogContent showCloseButton={false} className="sm:max-w-[425px] p-0 overflow-hidden bg-owow-card border-white/10 text-white gap-0">
                     <form onSubmit={handleSubmit} className="flex flex-col h-full">
 
                         {/* Header / Name Input */}
@@ -121,11 +121,6 @@ export function EditWizkidDialog({ wizkid, open, onOpenChange, onSave, userRole 
                                 )}>
                                     {isFired ? 'FORMER WIZKID' : 'EDIT PROFILE'}
                                 </span>
-                                {isFired && (
-                                    <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-white/10 text-gray-400">
-                                        TERMINATED
-                                    </span>
-                                )}
                             </div>
                             <input
                                 value={name}
